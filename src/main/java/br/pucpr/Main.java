@@ -10,6 +10,7 @@ import br.pucpr.planet.PlanetaColumns;
 import br.pucpr.table.Table;
 import br.pucpr.table.TableBuilder;
 import br.pucpr.table.model.ColumnTableData;
+import br.pucpr.table.widget.RowCounter;
 import br.pucpr.user.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -30,11 +31,23 @@ public class Main {
 
     System.out.println("IMPRIMINDO USUARIOS");
     System.out.println("-------------------");
-    new Table(
-            new ColumnTableData<>(
-                usuarios, new IdColumn(), new NameColumn(), new CpfColumn(), new EmailColumn()),
-            LIGHT)
-        .print();
+    final var dadosUsuarios =
+        new ColumnTableData<>(
+            usuarios, new IdColumn(), new NameColumn(), new CpfColumn(), new EmailColumn());
+    final var tabela = new Table(dadosUsuarios, LIGHT).watch();
+    new RowCounter("Usuários").attachTo(dadosUsuarios);
+    tabela.print();
+
+    System.out.println();
+    System.out.println("ALTERANDO OS DADOS (observadores são avisados)");
+    System.out.println("----------------------------------------------");
+    dadosUsuarios.add(new User(108L, "Fernanda Rocha", "fernanda@email.com", "32165498700"));
+    dadosUsuarios.set(4, new User(105L, "Lucas Mendes", "lucas@email.com", "12345678909"));
+    dadosUsuarios.remove(3);
+
+    tabela.stopWatching();
+    System.out.println("(tabela deixou de observar; só o contador reage agora)");
+    dadosUsuarios.remove(0);
 
     final var planetas = new ArrayList<Planet>();
     planetas.add(new Planet("Mercúrio", 4879, 57_910_000L, ROCK));
