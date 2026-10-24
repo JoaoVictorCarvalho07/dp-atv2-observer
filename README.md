@@ -1,15 +1,28 @@
-# Atividade
+# Atividade 1 – ColumnData de usuários
 
-Antes de começar, analise como foi implementado o exemplo de reflexão na classe Main
-Veja como foi criada e utilizada a anotação @Column
----
+Termine de implementar as interfaces `ColumnData` para exibir a tabela de usuários.
 
-## 🎯 Objetivo da Atividade
+## Padrão utilizado: Strategy
 
-Inspecione a classe do usuário ou planeta e gere o modelo automaticamente.
+A `Table` não conhece a classe `User`. Ela só sabe trabalhar com `ColumnData<T>`, que diz
+o cabeçalho da coluna e como transformar um objeto em texto. Cada coluna é uma estratégia
+diferente de extração/formatação:
 
----
+| Classe        | O que faz                                                         |
+|---------------|-------------------------------------------------------------------|
+| `IdColumn`    | código com zeros à esquerda (`#00101`)                            |
+| `NameColumn`  | nome sem espaços extras; vazio vira `(sem nome)`                  |
+| `CpfColumn`   | aceita CPF com ou sem pontuação e formata como `000.000.000-00`   |
+| `EmailColumn` | normaliza para minúsculas; marca e-mails vazios ou inválidos      |
 
-## 🛠️ Requisitos para Execução
+Para criar uma coluna nova basta implementar `ColumnData<User>`, sem alterar a tabela
+(princípio aberto/fechado).
 
-* **Linguagem:** Java 17 ou superior
+## Como executar
+
+Requer JDK 21.
+
+```bash
+./gradlew build   # compila, roda spotless e spotbugs
+./gradlew run     # imprime as tabelas
+```
