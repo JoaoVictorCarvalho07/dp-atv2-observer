@@ -1,6 +1,8 @@
 package br.pucpr.table;
 
+import br.pucpr.table.model.TableChange;
 import br.pucpr.table.model.TableData;
+import br.pucpr.table.model.TableDataListener;
 import br.pucpr.table.reflection.Column;
 import java.util.ArrayList;
 
@@ -8,6 +10,7 @@ public final class Table {
   private TableData data;
   private Theme theme;
   private boolean alignRight;
+  private final TableDataListener redrawer = this::redraw;
 
   public Table(TableData data, Theme theme, boolean alignRight) {
     if (data == null) {
@@ -31,7 +34,26 @@ public final class Table {
   }
 
   public void setData(TableData data) {
+    if (data == null) {
+      throw new IllegalArgumentException("Data cannot be null");
+    }
+    stopWatching();
     this.data = data;
+  }
+
+  /** Passa a redesenhar a tabela automaticamente sempre que os dados mudarem. */
+  public Table watch() {
+    data.addListener(redrawer);
+    return this;
+  }
+
+  public void stopWatching() {
+    data.removeListener(redrawer);
+  }
+
+  private void redraw(TableChange change) {
+    System.out.printf("[tabela redesenhada: %s na linha %d]%n", change.kind(), change.row());
+    print();
   }
 
   public Theme getTheme() {
