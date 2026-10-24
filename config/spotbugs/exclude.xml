@@ -3,4 +3,12 @@
     <Match>
         <Bug pattern="EI_EXPOSE_REP2" />
     </Match>
+    <!-- Os observadores precisam da referência real aos dados que mudaram -->
+    <Match>
+        <Bug pattern="EI_EXPOSE_REP" />
+        <Or>
+            <Class name="br.pucpr.table.model.TableChange" />
+            <Class name="br.pucpr.table.Table" />
+        </Or>
+    </Match>
 </FindBugsFilter>
