@@ -2,37 +2,24 @@ package br.pucpr.user;
 
 import br.pucpr.table.model.ColumnData;
 
+/** Coluna com o CPF no formato 000.000.000-00. */
 public class CpfColumn implements ColumnData<User> {
-  private boolean maskCpf;
-
-  public CpfColumn(boolean maskCpf) {
-    this.maskCpf = maskCpf;
-  }
-
-  public CpfColumn() {
-    this(false);
-  }
+  private static final int TAMANHO_CPF = 11;
 
   @Override
   public String header() {
-    return "       CPF      ";
+    return "CPF           ";
   }
 
   @Override
   public String get(User user) {
-    final var cpf = user.cpf();
-    if (cpf == null || cpf.length() != 11) {
-      return "CPF INVÁLIDO";
+    final var cpf = user.cpf() == null ? "" : user.cpf().replaceAll("\\D", "");
+    if (cpf.isEmpty()) {
+      return "(vazio)";
     }
-    if (maskCpf) {
-      return "***." + cpf.substring(3, 6) + "." + cpf.substring(6, 9) + "-**";
+    if (cpf.length() != TAMANHO_CPF) {
+      return "?? " + cpf;
     }
-    return cpf.substring(0, 3)
-        + "."
-        + cpf.substring(3, 6)
-        + "."
-        + cpf.substring(6, 9)
-        + "-"
-        + cpf.substring(9, 11);
+    return cpf.replaceFirst("(\\d{3})(\\d{3})(\\d{3})(\\d{2})", "$1.$2.$3-$4");
   }
 }
