@@ -26,14 +26,14 @@ public class Main {
     usuarios.add(new User(104L, "Mariana Costa", "marianacosta.email.com", "11122233344"));
     usuarios.add(new User(105L, "Lucas Mendes", "lucas@email.com", "12345"));
     usuarios.add(new User(106L, "", "beatriz@email.com", "55566677788"));
+    usuarios.add(new User(107L, "Rafael Lima", "", "987.654.321-00"));
 
     System.out.println("IMPRIMINDO USUARIOS");
     System.out.println("-------------------");
     new Table(
             new ColumnTableData<>(
-                usuarios, new IdColumn(), new CpfColumn(), new EmailColumn(), new NameColumn()),
-            LIGHT,
-            true)
+                usuarios, new IdColumn(), new NameColumn(), new CpfColumn(), new EmailColumn()),
+            LIGHT)
         .print();
 
     final var planetas = new ArrayList<Planet>();
